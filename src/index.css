@@ -70,6 +70,7 @@ button {
   font-weight: 700;
   background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 
@@ -115,9 +116,17 @@ button {
   font-size: 2.5rem;
 }
 
+/* Days Grid Container */
+.days-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 /* Day Card */
 .day-card {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
+  /* Handled by gap */
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -132,14 +141,13 @@ button {
   border-color: var(--color-primary);
   box-shadow: var(--shadow-lg);
   background-color: var(--color-surface);
-  grid-row: span 2;
-  /* For grid layout */
 }
 
 .day-header {
   width: 100%;
   text-align: left;
-  padding: 1rem;
+  padding: 1.25rem;
+  /* More padding */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -173,6 +181,16 @@ button {
 
 .day-toggle-icon {
   transition: transform 0.3s;
+  font-size: 1.25rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-toggle-icon::after {
+  content: "▼";
 }
 
 .day-card.active .day-toggle-icon {
@@ -319,7 +337,8 @@ button {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
     align-items: start;
-    /* Prevents cards from stretching to full height */
+    grid-auto-flow: dense;
+    /* Helps fill gaps if items are different sizes */
   }
 
   .day-card {
@@ -327,6 +346,64 @@ button {
     height: fit-content;
   }
 
-  /* When a card is active, it could span more rows or columns if we wanted, 
-     but for now keeping it simple in the grid flow is safer for masonry-like feel */
+  /* Active card expands to full width */
+  .day-card.active {
+    grid-column: 1 / -1;
+    order: -1;
+    /* Move to top on desktop */
+    /* Ensure it stays at top in grid too */
+  }
+
+  /* Horizontal layout for events inside active card */
+  .day-card.active .day-content>div {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    /* Custom scrollbar for webkit */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-surface);
+  }
+
+  /* Desktop Icons */
+  .day-toggle-icon::after {
+    content: "⤢";
+    /* Expand icon */
+    font-size: 1.5rem;
+  }
+
+  .day-card.active .day-toggle-icon {
+    transform: none;
+    /* No rotation on desktop */
+  }
+
+  .day-card.active .day-toggle-icon::after {
+    content: "×";
+    /* Close icon */
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .day-card.active .day-content>div::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .day-card.active .day-content>div::-webkit-scrollbar-track {
+    background: var(--color-surface);
+    border-radius: 4px;
+  }
+
+  .day-card.active .day-content>div::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 4px;
+  }
+
+  /* Fixed width for event items in horizontal view */
+  .day-card.active .event-item {
+    min-width: 320px;
+    max-width: 320px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
 }
