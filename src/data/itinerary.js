@@ -179,7 +179,7 @@ export const itinerary = [
         type: "meal",
       },
       {
-        time: "13:30",
+        time: "15:30",
         title: "Lanche: Casa Godinho",
         address: "Rua Líbero Badaró, 340 - Centro",
         location: "Casa Godinho",
